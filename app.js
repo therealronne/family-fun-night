@@ -513,6 +513,9 @@ function displayActivity(activity) {
     addFavoriteBtn.textContent = isFavorite ? '💔 Remove from Favorites' : '❤️ Save to Favorites';
 
     resultSection.classList.remove('hidden');
+
+    // Scroll to the result
+    resultSection.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Close Result
