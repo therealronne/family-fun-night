@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Now?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>What Now?</h1>
+            <p class="subtitle">Let's find something fun to do together!</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="finder">Find Activity</button>
+            <button class="tab-btn" data-tab="generator">Create New Game</button>
+            <button class="tab-btn" data-tab="favorites">Favorites</button>
+        </nav>
+
+        <!-- Activity Finder Tab -->
+        <section id="finder" class="tab-content active">
+            <div class="criteria-section">
+                <h2>What's the mood tonight?</h2>
+                <div class="mood-grid">
+                    <button class="mood-btn" data-mood="physical">
+                        <span class="mood-icon">🏃</span>
+                        <span class="mood-label">Physical</span>
+                        <span class="mood-desc">Get moving!</span>
+                    </button>
+                    <button class="mood-btn" data-mood="lazy">
+                        <span class="mood-icon">🛋️</span>
+                        <span class="mood-label">Relaxed</span>
+                        <span class="mood-desc">Chill vibes</span>
+                    </button>
+                    <button class="mood-btn" data-mood="intellectual">
+                        <span class="mood-icon">🧠</span>
+                        <span class="mood-label">Brainy</span>
+                        <span class="mood-desc">Think & learn</span>
+                    </button>
+                    <button class="mood-btn" data-mood="creative">
+                        <span class="mood-icon">🎨</span>
+                        <span class="mood-label">Creative</span>
+                        <span class="mood-desc">Make stuff</span>
+                    </button>
+                    <button class="mood-btn" data-mood="competitive">
+                        <span class="mood-icon">🏆</span>
+                        <span class="mood-label">Competitive</span>
+                        <span class="mood-desc">Game on!</span>
+                    </button>
+                    <button class="mood-btn" data-mood="cooperative">
+                        <span class="mood-icon">🤝</span>
+                        <span class="mood-label">Teamwork</span>
+                        <span class="mood-desc">Work together</span>
+                    </button>
+                </div>
+
+                <h2>How much time do we have?</h2>
+                <div class="time-grid">
+                    <button class="time-btn" data-time="15">
+                        <span class="time-value">15</span>
+                        <span class="time-unit">mins</span>
+                    </button>
+                    <button class="time-btn" data-time="30">
+                        <span class="time-value">30</span>
+                        <span class="time-unit">mins</span>
+                    </button>
+                    <button class="time-btn" data-time="60">
+                        <span class="time-value">1</span>
+                        <span class="time-unit">hour</span>
+                    </button>
+                    <button class="time-btn" data-time="120">
+                        <span class="time-value">2+</span>
+                        <span class="time-unit">hours</span>
+                    </button>
+                </div>
+
+                <button id="findActivity" class="primary-btn" disabled>
+                    Find Something Fun!
+                </button>
+            </div>
+
+            <div id="result" class="result-section hidden">
+                <div class="result-card">
+                    <button class="close-btn" id="closeResult">&times;</button>
+                    <h2 id="activityName"></h2>
+                    <p id="activityDescription"></p>
+                    <div class="activity-meta">
+                        <span class="meta-item" id="activityTime"></span>
+                        <span class="meta-item" id="activityMood"></span>
+                    </div>
+                    <div id="activityMaterials" class="materials-section"></div>
+                    <div id="activityInstructions" class="instructions-section"></div>
+                    <div class="result-actions">
+                        <button class="secondary-btn" id="tryAnother">Try Another</button>
+                        <button class="favorite-btn" id="addFavorite">❤️ Save to Favorites</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Generator Tab -->
+        <section id="generator" class="tab-content">
+            <div class="generator-intro">
+                <h2>Let's Create a New Game!</h2>
+                <p>Answer a few questions and we'll design a custom activity just for your family.</p>
+            </div>
+
+            <div class="generator-steps">
+                <div class="step active" data-step="1">
+                    <h3>Step 1: What do you have?</h3>
+                    <p>Select items you have available:</p>
+                    <div class="items-grid">
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="cards"> 🃏 Cards
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="dice"> 🎲 Dice
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="paper"> 📝 Paper & Pens
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="ball"> ⚽ Ball
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="timer"> ⏱️ Timer
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="blankets"> 🛏️ Blankets/Pillows
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="music"> 🎵 Music Player
+                        </label>
+                        <label class="item-checkbox">
+                            <input type="checkbox" value="craft"> ✂️ Craft Supplies
+                        </label>
+                    </div>
+                    <button class="primary-btn step-next">Next</button>
+                </div>
+
+                <div class="step" data-step="2">
+                    <h3>Step 2: What sounds fun?</h3>
+                    <p>Pick elements you'd like in your game:</p>
+                    <div class="elements-grid">
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="turns"> Taking Turns
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="teams"> Teams
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="points"> Scoring Points
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="acting"> Acting/Performing
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="guessing"> Guessing
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="building"> Building Something
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="story"> Storytelling
+                        </label>
+                        <label class="element-checkbox">
+                            <input type="checkbox" value="challenge"> Physical Challenges
+                        </label>
+                    </div>
+                    <div class="step-buttons">
+                        <button class="secondary-btn step-prev">Back</button>
+                        <button class="primary-btn step-next">Next</button>
+                    </div>
+                </div>
+
+                <div class="step" data-step="3">
+                    <h3>Step 3: Add your twist!</h3>
+                    <p>What theme or special rule should we include?</p>
+                    <input type="text" id="customTheme" placeholder="e.g., 'space adventure' or 'no talking'" class="text-input">
+                    <p>Any inside jokes or family favorites to include?</p>
+                    <input type="text" id="familyTwist" placeholder="e.g., 'Dad's funny dance' or 'the cat'" class="text-input">
+                    <div class="step-buttons">
+                        <button class="secondary-btn step-prev">Back</button>
+                        <button class="primary-btn" id="generateGame">Create Our Game!</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="generatedGame" class="generated-game hidden">
+                <div class="result-card">
+                    <h2 id="generatedName"></h2>
+                    <p id="generatedDescription"></p>
+                    <div id="generatedRules" class="rules-section"></div>
+                    <div class="result-actions">
+                        <button class="secondary-btn" id="regenerate">Generate Different Version</button>
+                        <button class="favorite-btn" id="saveGenerated">❤️ Save This Game</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Favorites Tab -->
+        <section id="favorites" class="tab-content">
+            <h2>Your Saved Activities</h2>
+            <div id="favoritesList" class="favorites-list">
+                <p class="empty-message">No favorites saved yet! Find an activity and click the heart to save it.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
