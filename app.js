@@ -629,157 +629,524 @@ generateGameBtn.addEventListener('click', () => {
     displayGeneratedGame(game);
 });
 
+// Complete game templates with specific instructions
+const gameTemplates = {
+    // Games requiring cards
+    cardsGames: [
+        {
+            name: "Speed Snap",
+            description: "A fast-paced card matching game where quick reflexes win!",
+            setup: "Shuffle the deck and deal all cards face-down equally to each player. Players keep their cards in a pile without looking.",
+            rules: [
+                "SETUP: Each player holds their face-down card pile in one hand.",
+                "GAMEPLAY: Going clockwise, each player quickly flips their top card onto a central pile.",
+                "SNAP RULE: When two consecutive cards match (same number/face), the first person to slap the pile and yell 'SNAP!' wins all the cards in the pile.",
+                "PENALTY: If you slap incorrectly (no match), you must give 2 cards from your pile to each other player.",
+                "WINNING: Play until one person has all the cards, OR set a 10-minute timer - most cards wins!"
+            ],
+            scoring: "Winner gets all cards in the pile. Game ends when one player collects the entire deck or time runs out."
+        },
+        {
+            name: "Card Tower Race",
+            description: "Compete to build the tallest card tower in exactly 3 minutes!",
+            setup: "Each player gets exactly 15 cards. Clear a flat surface for each player.",
+            rules: [
+                "SETUP: Give each player 15 cards. Players sit at their own section of the table.",
+                "START: Set timer for 3 minutes. Say 'Ready, Set, Build!'",
+                "BUILDING: Lean 2 cards against each other to form a triangle. Place cards flat on top to create floors. Repeat upward.",
+                "NO TOUCHING RULE: Once you place a card, you cannot adjust it. If your tower falls, start over with your remaining cards.",
+                "TIME'S UP: When timer rings, hands off! Towers are measured from table to highest point."
+            ],
+            scoring: "Measure each tower's height. Tallest tower wins! Tie-breaker: whoever used fewer cards."
+        },
+        {
+            name: "Memory Match Madness",
+            description: "Classic memory game with a twist - you must do a silly action when you get a match!",
+            setup: "Remove face cards, use only number cards (Ace-10). Shuffle and lay out all 40 cards face-down in a grid.",
+            rules: [
+                "SETUP: Lay out cards in 5 rows of 8 cards, all face-down.",
+                "YOUR TURN: Flip over exactly 2 cards so everyone can see them.",
+                "MATCH FOUND: If both cards show the same number, keep them AND do a silly dance for 5 seconds. Then take another turn.",
+                "NO MATCH: If cards don't match, flip them back face-down in the same spots. Turn passes clockwise.",
+                "GAME END: When all cards are matched, count your pairs."
+            ],
+            scoring: "Each pair = 1 point. Most pairs wins! Bonus: +2 points if you remembered a card's location that someone else revealed."
+        }
+    ],
+
+    // Games requiring dice
+    diceGames: [
+        {
+            name: "Dice Dare Challenge",
+            description: "Roll the dice to determine your silly challenge!",
+            setup: "You need 2 dice. Write down or remember the challenge list below.",
+            rules: [
+                "ROLL MEANINGS - Roll 2 dice and add them together:",
+                "2 (Snake Eyes): Do your best robot dance for 15 seconds",
+                "3: Say the alphabet backwards as fast as you can",
+                "4: Do 5 jumping jacks while singing 'Happy Birthday'",
+                "5: Talk in a British accent until your next turn",
+                "6: Balance on one foot for 20 seconds with eyes closed",
+                "7 (Lucky!): Choose any other player to do YOUR dare",
+                "8: Do your best impression of another player - they must guess who",
+                "9: Say 5 nice things about the person to your left",
+                "10: Speak only in questions until your next turn",
+                "11: Do a dramatic slow-motion replay of drinking water",
+                "12 (Boxcars): Everyone else must do 10 jumping jacks!"
+            ],
+            scoring: "Complete your dare = 1 point. Refuse = 0 points. First to 7 points wins!"
+        },
+        {
+            name: "Race to 50",
+            description: "Strategic dice game - push your luck or play it safe!",
+            setup: "Each player needs a way to track their score (paper or phone). You need 2 dice.",
+            rules: [
+                "GOAL: First player to reach exactly 50 points wins.",
+                "YOUR TURN: Roll both dice. You can either BANK your points or ROLL AGAIN.",
+                "BANKING: Add your current turn's total to your score. Turn ends. Pass dice.",
+                "ROLLING AGAIN: Add the dice total to your turn total, then choose again.",
+                "BUST RULE: If you roll a 1 on either die, your turn ends and you score 0 for that turn!",
+                "DOUBLE 1s: If you roll two 1s, your turn ends AND you lose ALL your banked points!",
+                "EXACT 50: You must land exactly on 50. If your roll would put you over, you score nothing that turn."
+            ],
+            scoring: "First to exactly 50 points wins. If you go over, your turn total is lost."
+        }
+    ],
+
+    // Games requiring paper
+    paperGames: [
+        {
+            name: "Broken Telephone Pictionary",
+            description: "Draw and guess in a hilarious chain of misunderstandings!",
+            setup: "Each player needs 3 small pieces of paper and a pen. Sit in a circle.",
+            rules: [
+                "ROUND START: Everyone writes a simple phrase on their first paper (e.g., 'Dog riding a skateboard').",
+                "PASS LEFT: Pass your paper to the player on your left.",
+                "DRAW IT: Look at the phrase you received. On your second paper, DRAW it (no words/letters!). You have 30 seconds.",
+                "PASS LEFT AGAIN: Pass ONLY your drawing (not the original phrase).",
+                "GUESS IT: Look at the drawing you received. On your third paper, write what you think it shows.",
+                "REVEAL: Go around the circle. Each person shows: original phrase → drawing → final guess. Laugh at the chaos!"
+            ],
+            scoring: "Award 2 points if the final guess matches the original phrase. Most points after 3 rounds wins!"
+        },
+        {
+            name: "Category Sprint",
+            description: "Fast-paced word game - list as many items as you can in 30 seconds!",
+            setup: "Each player needs paper and a pen. One person is the 'Caller' each round.",
+            rules: [
+                "CALLER DUTIES: Think of a category (e.g., 'Things that are red', 'Foods you eat cold', 'Animals with 4 legs').",
+                "ANNOUNCE: Caller says the category and starts a 30-second timer.",
+                "WRITE FAST: Everyone (including Caller) writes as many items as possible that fit the category.",
+                "TIME'S UP: Pens down! Go around and read your lists out loud.",
+                "SCORING: Cross out any item that ANYONE else also wrote. Count your remaining unique items.",
+                "NEXT ROUND: Player to the left becomes the new Caller. Play 5 rounds total."
+            ],
+            scoring: "Each unique item = 1 point. Highest total after 5 rounds wins!"
+        },
+        {
+            name: "Exquisite Corpse Drawing",
+            description: "Create hilarious creatures by drawing in sections without seeing the whole picture!",
+            setup: "Each player needs one piece of paper (ideally longer paper works best) and a pen.",
+            rules: [
+                "FOLD YOUR PAPER: Fold it into 3 equal horizontal sections (like a letter).",
+                "SECTION 1 - HEAD: Draw a head/face on the top section. It can be human, animal, monster, anything! Draw 2 small lines extending just past the fold onto section 2.",
+                "FOLD & PASS: Fold section 1 back so it's hidden. Pass to the player on your left.",
+                "SECTION 2 - BODY: You can only see the 2 lines. Draw a body/torso connecting to those lines. Draw 2 lines extending onto section 3. Fold section 2 back and pass left.",
+                "SECTION 3 - LEGS: Draw legs/feet connecting to the visible lines.",
+                "REVEAL: Unfold completely and show your creature! Give it a name together."
+            ],
+            scoring: "No points - just laughs! Vote on: 'Most Likely to Be Real', 'Most Terrifying', 'Would Adopt'"
+        }
+    ],
+
+    // Games requiring timer
+    timerGames: [
+        {
+            name: "60-Second Expert",
+            description: "Become an instant 'expert' on ridiculous topics!",
+            setup: "Write 10+ silly topics on paper slips (e.g., 'Why cats secretly run the world', 'The history of belly button lint', 'How to train a goldfish').",
+            rules: [
+                "DRAW A TOPIC: Active player picks a topic slip without looking first.",
+                "PREPARE: You have exactly 10 seconds to think after reading the topic.",
+                "PRESENT: Set timer for 60 seconds. You must talk confidently about this topic as if you're an expert. No stopping!",
+                "RULES: No saying 'um' or 'uh'. No repeating sentences. Must sound confident even when making things up!",
+                "JUDGING: Other players hold up 1-5 fingers for how convincing you were.",
+                "ROTATE: Next player clockwise draws a new topic."
+            ],
+            scoring: "Add up the fingers shown for your score. Highest score after everyone goes twice wins!"
+        },
+        {
+            name: "Speed Stacker Challenge",
+            description: "Stack household items as high as possible in exactly 60 seconds!",
+            setup: "Gather stackable items: books, cans, boxes, cushions, toys. Each player gets the same items.",
+            rules: [
+                "ITEM DRAFT: Place all stackable items in the center. Going in turns, each player picks 1 item until everyone has 10 items.",
+                "BUILDING ZONE: Each player sits at their designated spot at least 3 feet apart.",
+                "GO!: Start the 60-second timer. Stack your items as high as possible!",
+                "MUST STAND: Your tower must stand on its own for 5 seconds after time is called.",
+                "NO LEANING: Tower cannot lean against walls, furniture, or people.",
+                "COLLAPSE: If your tower falls during building, you can rebuild with remaining time."
+            ],
+            scoring: "Measure tower height in inches. Tallest standing tower wins! If tied, fewer items used wins."
+        }
+    ],
+
+    // Games requiring ball
+    ballGames: [
+        {
+            name: "Hot Potato Trivia",
+            description: "Pass the ball while answering questions - hesitate and you're out!",
+            setup: "Sit in a circle. One person is the 'Question Master' and doesn't hold the ball.",
+            rules: [
+                "START: Question Master starts music (or counts silently). Ball holder begins passing clockwise.",
+                "QUESTION TIME: Question Master stops music/counting randomly and asks a quick question to whoever holds the ball.",
+                "CATEGORIES: Animals, Foods, Movies, Colors, Countries - Question Master picks the category.",
+                "ANSWER FAST: Ball holder must give a valid answer within 3 seconds. Answer must fit the category and not be repeated.",
+                "OUT: Fail to answer in time, repeat an answer, or give an invalid answer = you're out. Sit out and help judge.",
+                "CONTINUE: Remaining players keep passing. Last person standing wins!"
+            ],
+            scoring: "Last person remaining wins the round. Best of 3 rounds = champion!"
+        },
+        {
+            name: "Bounce Battle",
+            description: "Competitive ball bouncing into targets - easy to learn, hard to master!",
+            setup: "Set up 5 targets at different distances: a pot, a box, a bag, etc. Mark a throwing line with tape.",
+            rules: [
+                "TARGET SETUP: Place targets at varying distances. Closer targets = fewer points.",
+                "TARGET POINTS: Closest = 1 point, Next = 2 points, Middle = 3 points, Far = 5 points, Farthest = 10 points.",
+                "THROWING: Stand behind the line. You must bounce the ball ONCE before it lands in a target.",
+                "TURNS: Each player gets 5 throws per round. Play 3 rounds total.",
+                "BOUNCE REQUIRED: Ball must bounce exactly once. Direct throws or multiple bounces don't count.",
+                "STUCK BONUS: If ball stays in target = double points for that throw!"
+            ],
+            scoring: "Add up points from all rounds. Highest total wins! Tie-breaker: sudden death throw at farthest target."
+        }
+    ],
+
+    // Games requiring blankets
+    blanketGames: [
+        {
+            name: "Mummy Wrap Race",
+            description: "Wrap your teammate in a blanket mummy as fast as possible!",
+            setup: "You need at least 2 blankets. Split into teams of 2 (one wrapper, one mummy).",
+            rules: [
+                "POSITIONS: 'Mummy' stands with arms at their sides. 'Wrapper' holds the blanket ready.",
+                "GOAL: Wrap your mummy completely - only face can show. Arms, legs, body all covered.",
+                "START: Someone says 'Ready, Set, Wrap!' All teams start at the same time.",
+                "WRAPPING RULES: Mummy must stand still. No blanket can touch the floor. Mummy cannot help.",
+                "DONE: When wrapper thinks they're finished, both people yell 'MUMMY!' and freeze.",
+                "JUDGING: Check each mummy. Any skin showing (except face) = not done. First complete mummy wins!"
+            ],
+            scoring: "First team done = 5 points. Second = 3 points. Third = 1 point. Switch roles and play again!"
+        },
+        {
+            name: "Blanket Fort Architect",
+            description: "Competitive fort building with specific requirements!",
+            setup: "Each team gets: 2 blankets, 4 pillows, and 3 chairs. Set a 10-minute timer.",
+            rules: [
+                "REQUIREMENTS - Your fort MUST have all of these:",
+                "1. An entrance big enough to crawl through",
+                "2. Room for all team members to sit inside",
+                "3. A 'window' (hole you can see through)",
+                "4. A 'flag' (corner of blanket sticking up on top)",
+                "5. The fort must stand on its own for 30 seconds",
+                "BUILDING: 10 minutes to complete. All team members must help.",
+                "JUDGING: At 10 minutes, hands off! Forts are checked for all 5 requirements."
+            ],
+            scoring: "Each requirement met = 2 points. Fastest to finish (if both complete) = 3 bonus points."
+        }
+    ],
+
+    // Games requiring music
+    musicGames: [
+        {
+            name: "Freeze Dance Eliminator",
+            description: "Dance when the music plays, freeze when it stops!",
+            setup: "Clear a dancing area. One person controls the music (the DJ).",
+            rules: [
+                "DJ CONTROLS: DJ plays music facing away from dancers. DJ pauses music randomly every 10-30 seconds.",
+                "DANCING: When music plays, everyone MUST dance. No standing still allowed!",
+                "FREEZING: When music stops, FREEZE immediately. Hold your exact position.",
+                "JUDGING: DJ slowly turns around and watches for 5 seconds. ANY movement = you're out.",
+                "MOVEMENT = Moving arms, legs, head, swaying, blinking too much, or laughing so hard you shake!",
+                "LAST DANCER: When only one dancer remains, they become the next DJ. Previous DJ joins dancers."
+            ],
+            scoring: "Last person dancing each round = 3 points. Play 5 rounds. Highest points wins!"
+        },
+        {
+            name: "Lyric Sync Battle",
+            description: "Lip sync and perform to song snippets - be dramatic!",
+            setup: "Create a playlist of 10 well-known songs. Each player gets a turn to perform.",
+            rules: [
+                "SONG SELECTION: DJ plays a random song from the playlist for 30-45 seconds.",
+                "PERFORMANCE: The performer must dramatically lip sync AND add dance moves/gestures.",
+                "ENERGY REQUIRED: You must use the whole performance space. Move around! Be dramatic!",
+                "JUDGING CRITERIA: Other players rate 1-10 on: Accuracy of lyrics (mouth movement), Energy/Dancing, Dramatic flair",
+                "PROPS BONUS: Using any household item as a 'microphone' or prop = +2 bonus points",
+                "EVERYONE PERFORMS: Each player performs to 2 different songs."
+            ],
+            scoring: "Add up all ratings received. Highest total score wins! Award 'Best Dramatic Moment' too."
+        }
+    ],
+
+    // Games requiring craft supplies
+    craftGames: [
+        {
+            name: "Wearable Art Fashion Show",
+            description: "Create an outfit or accessory from craft supplies and model it!",
+            setup: "Gather: paper, tape, scissors, markers, string, any craft supplies. 15 minutes to create.",
+            rules: [
+                "MATERIALS: Each player gets equal supplies. May also use newspaper, bags, etc.",
+                "THEME (pick one): Futuristic, Nature-inspired, Formal wear, Superhero costume",
+                "CREATION: 15 minutes to design and make a wearable item. Can be hat, jewelry, cape, full outfit.",
+                "MUST BE WEARABLE: You have to actually wear it for the fashion show.",
+                "FASHION SHOW: Clear a 'runway' space. Each person walks the runway, poses at the end, walks back.",
+                "COMMENTARY: One person gives fashion commentary like a real show ('And here comes Alex in a stunning paper hat...')"
+            ],
+            scoring: "Vote on: Most Creative, Best Constructed, Best Runway Walk. Winners get 3 points each. Multiple categories = more points!"
+        },
+        {
+            name: "60-Second Sculpture Sprint",
+            description: "Create a recognizable sculpture in just 60 seconds!",
+            setup: "Each player gets: 5 pipe cleaners OR a ball of clay/playdough OR 10 pieces of paper + tape.",
+            rules: [
+                "ANNOUNCER: One person announces a random object (e.g., 'elephant', 'car', 'pizza', 'guitar').",
+                "CREATE: Start 60-second timer. Using only your materials, sculpt that object!",
+                "HANDS OFF: When timer ends, step away from your sculpture.",
+                "GUESSING: Cover or hide all sculptures. Reveal one at a time - others guess what it is.",
+                "SCORING: If guessed correctly = 2 points for the artist. Wrong guess = artist gets 0.",
+                "ROTATE: Different person announces next round. Everyone plays 4 rounds."
+            ],
+            scoring: "Add up points from all rounds. Most points wins! Bonus: 'Most Unrecognizable' award (no points, just laughs)."
+        }
+    ],
+
+    // Acting/Performing games
+    actingGames: [
+        {
+            name: "Emotion Explosion",
+            description: "Act out everyday activities with extreme emotions!",
+            setup: "Write emotions on slips: FURIOUS, OVERJOYED, TERRIFIED, DISGUSTED, MADLY IN LOVE, EXTREMELY BORED, SUSPICIOUS, HYPER",
+            rules: [
+                "ACTIVITY LIST: Making a sandwich, Brushing teeth, Opening a present, Answering the phone, Finding a spider, Reading a text message",
+                "DRAW BOTH: Active player draws one EMOTION and one ACTIVITY slip.",
+                "PERFORM: You have 60 seconds to act out the activity while showing that emotion. No talking!",
+                "GUESSING: Other players must guess BOTH the emotion AND the activity.",
+                "PARTIAL CREDIT: Guessing emotion only = 1 point for guesser. Activity only = 1 point. Both = 3 points.",
+                "PERFORMER POINTS: If someone guesses both correctly, performer also gets 2 points."
+            ],
+            scoring: "First to 15 points wins! (Both guessers and performers can earn points)"
+        },
+        {
+            name: "One-Word Story Actors",
+            description: "Create a story one word at a time, then act out the whole thing!",
+            setup: "Sit in a circle. Designate someone to write down the story.",
+            rules: [
+                "STORY BUILDING: Go around the circle. Each person adds exactly ONE word to the story.",
+                "STORY LENGTH: Continue until you've gone around 4 times (about 12 words with 3 players).",
+                "GRAMMAR COUNTS: You can say 'period' or 'comma' as your word to end sentences.",
+                "READ IT BACK: Story writer reads the complete story dramatically.",
+                "ASSIGN ROLES: Decide who plays each character/object mentioned in the story.",
+                "PERFORM: Act out the entire story! One person narrates while others perform.",
+                "REPEAT: Create 3 different stories, taking turns as narrator."
+            ],
+            scoring: "No points - just creative fun! Vote on 'Best Story' and 'Best Performance' at the end."
+        }
+    ],
+
+    // Guessing games
+    guessingGames: [
+        {
+            name: "Celebrity Head",
+            description: "Guess who you are by asking yes/no questions!",
+            setup: "Write famous characters/people on sticky notes or paper slips: movie characters, cartoon characters, celebrities everyone knows.",
+            rules: [
+                "SECRET IDENTITY: Without looking, each player gets a name stuck to their forehead (or held behind their head).",
+                "QUESTIONS: On your turn, ask ONE yes/no question about who you are. ('Am I a cartoon?' 'Am I female?')",
+                "ANSWERS: Everyone else answers honestly. If split (some yes, some no), it counts as 'maybe'.",
+                "GUESSING: Instead of a question, you can guess who you are. Wrong guess = your turn ends.",
+                "OUT: Correct guess = you're done! Help answer others' questions.",
+                "TURN ORDER: Keep rotating. Eliminated players still help answer."
+            ],
+            scoring: "First to guess correctly = 5 points. Second = 3 points. Third = 1 point."
+        },
+        {
+            name: "Sound Effect Guessing",
+            description: "Make sound effects for objects/actions while others guess!",
+            setup: "Write items on slips: Popcorn popping, Thunderstorm, Cat purring, Door creaking, Toilet flushing, Helicopter, Snoring, etc.",
+            rules: [
+                "DRAW A SOUND: Active player picks a slip and sees the sound they must make.",
+                "MAKE THE SOUND: Using only your voice (no words!), create that sound effect. Repeat as needed.",
+                "GUESSING: Other players shout out guesses. First correct guess wins the round.",
+                "ONE MINUTE LIMIT: If no one guesses in 60 seconds, reveal the answer. No points awarded.",
+                "NO ACTIONS: Sound maker cannot mime or gesture - voice only!",
+                "ROTATE: Everyone takes 3 turns making sounds."
+            ],
+            scoring: "Guesser gets 2 points for correct guess. Sound maker gets 1 point if someone guesses correctly."
+        }
+    ],
+
+    // Team games
+    teamGames: [
+        {
+            name: "Back-to-Back Drawing",
+            description: "One describes, one draws - but you can't see each other!",
+            setup: "Split into pairs. Each pair sits back-to-back. Drawer has paper and pen. Describer has a simple image.",
+            rules: [
+                "IMAGES: Use simple pictures - shapes, basic objects, stick figures. Nothing too complex.",
+                "DESCRIBING: Describer explains the image WITHOUT naming what it is. ('Draw a circle in the top left')",
+                "DRAWING: Drawer follows instructions exactly. Cannot ask questions!",
+                "TIME LIMIT: 90 seconds per drawing.",
+                "REVEALING: Compare the original image to the drawing. Rate similarity 1-10.",
+                "SWITCH: Partners swap roles. Do 3 rounds each."
+            ],
+            scoring: "Add up similarity ratings. Team with highest combined score wins!"
+        },
+        {
+            name: "Human Knot Race",
+            description: "Untangle your team's human knot faster than the other team!",
+            setup: "Need at least 6 players. Split into 2 teams. Each team forms a circle.",
+            rules: [
+                "FORM THE KNOT: Everyone reaches into the circle with both hands and grabs two DIFFERENT people's hands.",
+                "RULES: Cannot hold both hands of the same person. Cannot hold the hand of someone right next to you.",
+                "GO!: Both teams start untangling at the same time.",
+                "UNTANGLING: Climb over, duck under, twist around - but NEVER let go of hands!",
+                "GOAL: Form a complete circle (or figure-8) where everyone faces inward, still holding hands.",
+                "TALKING: Lots of communication! ('Step over my arm!' 'Duck under here!')"
+            ],
+            scoring: "First team to untangle wins! If neither succeeds in 10 minutes, team closest to solved wins."
+        }
+    ],
+
+    // Default/fallback games
+    defaultGames: [
+        {
+            name: "Statue Maker",
+            description: "Mold your partner into a statue, then everyone guesses what it is!",
+            setup: "Split into pairs. One is the 'clay', one is the 'sculptor'.",
+            rules: [
+                "SECRET STATUE: Sculptor whispers to the host what statue they'll make (e.g., 'Statue of Liberty', 'baseball player', 'dog').",
+                "MOLDING: Clay person goes limp. Sculptor has 60 seconds to position them into the statue pose.",
+                "NO TALKING: Sculptor cannot speak or gesture to clay. Only physically move their arms, legs, head.",
+                "FREEZE: Clay holds the position perfectly still.",
+                "GUESSING: Other players have 30 seconds to guess what the statue represents.",
+                "SWITCH: Partners swap roles. Everyone has 2 turns as sculptor."
+            ],
+            scoring: "Correct guess = 2 points for sculptor, 1 point for guesser. Fastest guess = 1 bonus point."
+        },
+        {
+            name: "Fortunately/Unfortunately",
+            description: "Build a wild story that swings between good and bad luck!",
+            setup: "Sit in a circle. Decide on a main character name (can be someone playing or a made-up name).",
+            rules: [
+                "STARTING: First player begins with a situation. ('Alex went to the store to buy milk.')",
+                "UNFORTUNATELY: Next player continues with something bad. ('Unfortunately, the store was being robbed by a clown.')",
+                "FORTUNATELY: Next player counters with something good. ('Fortunately, Alex is a trained clown fighter.')",
+                "PATTERN: Continue alternating unfortunately/fortunately around the circle.",
+                "BUILD ON IT: Each addition must connect to the previous statement logically (even if silly).",
+                "ENDING: After 3 full rounds, the next player must conclude the story."
+            ],
+            scoring: "Vote on: Most Creative Addition (3 points), Funniest Line (3 points), Best Ending (3 points)."
+        },
+        {
+            name: "Rhythm Name Game",
+            description: "Keep the beat while calling names - mess up and you're out!",
+            setup: "Sit in a circle. Learn the rhythm: slap thighs twice, clap twice, snap twice (or any consistent pattern).",
+            rules: [
+                "THE BEAT: Everyone does the rhythm together. Keep it steady throughout the game!",
+                "CALLING: On the SNAPS, active player says their name then another player's name.",
+                "EXAMPLE: (slap slap, clap clap) 'Alex - Sam' (said on the snaps)",
+                "RESPONSE: Sam must respond on the very next set of snaps with 'Sam - [new name]'.",
+                "OUT: You're out if you: miss the beat, hesitate too long, call someone already out, or call yourself.",
+                "SPEED UP: Every time someone gets out, the rhythm gets slightly faster!"
+            ],
+            scoring: "Last person in the game wins! Play best of 3 rounds."
+        }
+    ]
+};
+
 function generateCustomGame() {
     const { items, elements, theme, twist } = state.generatorInputs;
 
-    // Game templates based on elements
-    const templates = [
-        {
-            condition: () => elements.includes('guessing') && elements.includes('acting'),
-            generate: () => ({
-                name: theme ? `${capitalize(theme)} Charades` : 'Family Charades Remix',
-                description: `Act out ${theme || 'fun prompts'} while your family guesses!${twist ? ` Special rule: ${twist} must be included somehow!` : ''}`,
-                rules: [
-                    items.includes('timer') ? 'Set a 60-second timer for each turn' : 'Count to 30 for each turn',
-                    items.includes('paper') ? 'Write prompts on paper slips and draw from a bowl' : 'Take turns thinking of prompts',
-                    'No talking or sounds allowed while acting!',
-                    elements.includes('teams') ? 'Split into teams and alternate turns' : 'Everyone plays together - guesser becomes next actor',
-                    elements.includes('points') ? 'Award 2 points for correct guesses within time' : 'Just have fun - no scores needed!',
-                    twist ? `Bonus: Work in "${twist}" whenever possible for extra laughs!` : 'Be creative with your acting!'
-                ]
-            })
-        },
-        {
-            condition: () => elements.includes('building'),
-            generate: () => ({
-                name: theme ? `${capitalize(theme)} Construction Challenge` : 'Master Builders',
-                description: `Build something amazing together!${twist ? ` Inspired by: ${twist}` : ''}`,
-                rules: [
-                    items.includes('craft') ? 'Use craft supplies to build your creation' : 'Use whatever building materials you have',
-                    elements.includes('teams') ? 'Work in teams to build competing structures' : 'Work together on one epic creation',
-                    elements.includes('turns') ? 'Take turns adding one piece at a time' : 'Everyone builds simultaneously',
-                    items.includes('timer') ? 'You have 10 minutes to complete your build!' : 'Take your time and be creative',
-                    theme ? `Your build must fit the "${theme}" theme` : 'Build anything your imagination dreams up',
-                    elements.includes('points') ? 'Judge on creativity, stability, and theme-matching' : 'Celebrate everyone\'s creation!'
-                ]
-            })
-        },
-        {
-            condition: () => elements.includes('story'),
-            generate: () => ({
-                name: theme ? `Tales of ${capitalize(theme)}` : 'Story Spinners',
-                description: `Create an amazing story together, one piece at a time!${twist ? ` Featuring: ${twist}` : ''}`,
-                rules: [
-                    elements.includes('turns') ? 'Each person adds one sentence to the story' : 'Pass the story whenever someone says a keyword',
-                    items.includes('dice') ? 'Roll dice to determine what happens next (1-2: danger, 3-4: new character, 5-6: plot twist)' : 'Let your imagination guide the story',
-                    theme ? `The story must take place in a "${theme}" setting` : 'The story can go anywhere!',
-                    twist ? `The character "${twist}" must appear in the story` : 'Add unexpected characters!',
-                    items.includes('paper') ? 'Write down the story as you go' : 'Just tell it out loud',
-                    'The story ends when someone dramatically says "THE END!"'
-                ]
-            })
-        },
-        {
-            condition: () => elements.includes('challenge'),
-            generate: () => ({
-                name: theme ? `${capitalize(theme)} Challenge Gauntlet` : 'Family Challenge Time',
-                description: `Complete silly physical challenges to win!${twist ? ` ${twist} might make an appearance!` : ''}`,
-                rules: [
-                    items.includes('timer') ? 'Each challenge has a 60-second time limit' : 'Complete challenges as fast as you can',
-                    items.includes('ball') ? 'Challenge 1: Balance the ball on your head while walking across the room' : 'Challenge 1: Hop on one foot for 30 seconds',
-                    items.includes('blankets') ? 'Challenge 2: Wrap yourself in a blanket burrito, then unwrap as fast as possible' : 'Challenge 2: Do 10 jumping jacks in silly slow motion',
-                    elements.includes('teams') ? 'Teams take turns attempting challenges' : 'Everyone attempts each challenge',
-                    elements.includes('points') ? 'Award 10 points for completing each challenge' : 'Cheer for everyone who tries!',
-                    theme ? `All challenges must be done in a "${theme}" style` : 'Add your own flair to each challenge!'
-                ]
-            })
-        },
-        {
-            condition: () => elements.includes('points'),
-            generate: () => ({
-                name: theme ? `${capitalize(theme)} Points Race` : 'Family Points Showdown',
-                description: `Compete in mini-games to earn the most points!${twist ? ` Watch out for ${twist}!` : ''}`,
-                rules: [
-                    'Play 5 quick rounds of different mini-games',
-                    items.includes('cards') ? 'Round 1: Fastest to build a 3-level card tower' : 'Round 1: First to name 10 animals',
-                    items.includes('dice') ? 'Round 2: Roll dice - highest total wins' : 'Round 2: Rock-paper-scissors tournament',
-                    items.includes('paper') ? 'Round 3: Draw something in 30 seconds, others guess' : 'Round 3: Staring contest',
-                    theme ? `Round 4: Best ${theme}-themed impression` : 'Round 4: Silliest dance move',
-                    twist ? `Round 5: Everyone must incorporate "${twist}" somehow` : 'Round 5: Best joke wins',
-                    'Winner of each round gets 10 points. Most points at the end wins!'
-                ]
-            })
-        },
-        // Default template
-        {
-            condition: () => true,
-            generate: () => ({
-                name: theme ? `The ${capitalize(theme)} Game` : 'Family Fun Mashup',
-                description: `A custom game created just for your family!${twist ? ` Featuring the legendary ${twist}!` : ''}`,
-                rules: generateDefaultRules(items, elements, theme, twist)
-            })
-        }
-    ];
+    // Determine which game pool to use based on items and elements
+    let possibleGames = [];
 
-    // Find first matching template
-    const template = templates.find(t => t.condition());
-    return template.generate();
-}
-
-function generateDefaultRules(items, elements, theme, twist) {
-    const rules = [];
-
-    // Setup rule
+    // Add games based on available items
     if (items.includes('cards')) {
-        rules.push('Shuffle the deck and deal 5 cards to each player');
-    } else if (items.includes('dice')) {
-        rules.push('Each player rolls the dice to determine turn order (highest goes first)');
-    } else {
-        rules.push('Youngest player goes first, then go clockwise');
+        possibleGames.push(...gameTemplates.cardsGames);
+    }
+    if (items.includes('dice')) {
+        possibleGames.push(...gameTemplates.diceGames);
+    }
+    if (items.includes('paper')) {
+        possibleGames.push(...gameTemplates.paperGames);
+    }
+    if (items.includes('timer')) {
+        possibleGames.push(...gameTemplates.timerGames);
+    }
+    if (items.includes('ball')) {
+        possibleGames.push(...gameTemplates.ballGames);
+    }
+    if (items.includes('blankets')) {
+        possibleGames.push(...gameTemplates.blanketGames);
+    }
+    if (items.includes('music')) {
+        possibleGames.push(...gameTemplates.musicGames);
+    }
+    if (items.includes('craft')) {
+        possibleGames.push(...gameTemplates.craftGames);
     }
 
-    // Main mechanic
-    if (elements.includes('turns')) {
-        rules.push('Take turns clockwise around the group');
+    // Add games based on elements
+    if (elements.includes('acting')) {
+        possibleGames.push(...gameTemplates.actingGames);
+    }
+    if (elements.includes('guessing')) {
+        possibleGames.push(...gameTemplates.guessingGames);
     }
     if (elements.includes('teams')) {
-        rules.push('Split into two teams (parents vs kid, or mix it up!)');
+        possibleGames.push(...gameTemplates.teamGames);
     }
 
-    // Action rules
-    if (items.includes('timer') && elements.includes('guessing')) {
-        rules.push('You have 30 seconds to give clues while your team guesses');
-    }
-    if (items.includes('music') && elements.includes('acting')) {
-        rules.push('When the music plays, perform! When it stops, freeze!');
-    }
-    if (elements.includes('challenge') && items.includes('ball')) {
-        rules.push('Pass the ball while doing the challenge - drop it and you\'re out!');
+    // If no specific matches, use default games
+    if (possibleGames.length === 0) {
+        possibleGames = gameTemplates.defaultGames;
     }
 
-    // Scoring
-    if (elements.includes('points')) {
-        rules.push('Earn 5 points for each successful round. First to 25 wins!');
-    }
+    // Pick a random game from the possibilities
+    const selectedGame = possibleGames[Math.floor(Math.random() * possibleGames.length)];
 
-    // Theme integration
+    // Customize with theme and twist if provided
+    let gameName = selectedGame.name;
+    let gameDescription = selectedGame.description;
+
     if (theme) {
-        rules.push(`Everything must relate to the "${theme}" theme - be creative!`);
+        gameName = `${capitalize(theme)} ${selectedGame.name}`;
+        gameDescription = `${selectedGame.description} Theme: ${theme}!`;
     }
 
-    // Twist integration
+    // Build complete rules list
+    const rules = [];
+
+    if (selectedGame.setup) {
+        rules.push(`SETUP: ${selectedGame.setup}`);
+    }
+
+    rules.push(...selectedGame.rules);
+
+    if (selectedGame.scoring) {
+        rules.push(`SCORING: ${selectedGame.scoring}`);
+    }
+
     if (twist) {
-        rules.push(`Special rule: Whenever someone mentions "${twist}", everyone must do a silly action!`);
+        rules.push(`FAMILY TWIST: Whenever anyone says or does something related to "${twist}", everyone must freeze for 3 seconds!`);
     }
 
-    // Fallback rules if not many were generated
-    if (rules.length < 4) {
-        rules.push('Take turns doing something fun');
-        rules.push('Cheer for each other!');
-        rules.push('The most important rule: Have fun together!');
-    }
-
-    return rules;
+    return {
+        name: gameName,
+        description: gameDescription,
+        rules: rules
+    };
 }
 
 function capitalize(str) {
