@@ -1142,7 +1142,7 @@ function generateCustomGame() {
     }
 
     if (twist) {
-        rules.push(`FAMILY TWIST: Whenever anyone says or does something related to "${twist}", everyone must freeze for 3 seconds!`);
+        rules.push(`SPECIAL RULE: ${twist}`);
     }
 
     return {
